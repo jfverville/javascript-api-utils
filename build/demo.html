@@ -55,6 +55,89 @@
           JSON.stringify(columns.all(), null, 2);
     });
   }
+  
+  
+  
+  /**
+ * Note: This code assumes you have an authorized Analytics client object.
+ * See the Unsampled Reports Developer Guide for details.
+ */
+
+/**
+ * This request lists existing Remarketing Audiences.
+ */
+function listRemarketingAudiences('29063280', 'UA-29063280-1') {
+  let request = gapi.client.analytics.management.remarketingAudience.list(
+    {
+      'accountId': accountId,
+      'webPropertyId': propertyId,
+    }
+    ).then(printResults);
+}
+
+
+
+/**
+ * The results of the list method are passed as the results object.
+ * The following code shows how to iterate through them.
+ */
+function printResults(results) {
+  if (results && !results.error) {
+    let audiences = results.items;
+    for (let i = 0, audience; audience = audiences[i]; i++) {
+      console.log('Audience Id ' + audience.id);
+      console.log('Audience name ' + audience.name);
+    }
+    for (let j = 0, view; audience.linkedViews[j]; j++) {
+      console.log('linkedView ' + view);
+    }
+
+    // Get the linked accounts.
+    let linkedAccounts = audience.linkedAdAccounts;
+    for (let j = 0, link; link = linkedAccounts[i]; i++) {
+      console.log('Link type ' + link.type);
+      console.log('Link linkedAccountId ' + link.linkedAccountId);
+    }
+
+    // Get the audience type.
+    let audienceType = audience.type;
+    console.log('Audience type ' + audienceType);
+
+    // Get the audience definition.
+    if (audienceType == 'SIMPLE') {
+      let definition = audience.audienceDefinition;
+
+      // Get the include conditions.
+      let condition = definition.includeConditions;
+      console.log('Condition daysToLookBack ' + condition.daysToLookBack);
+      console.log('Condition membershipDurationDays ' +
+        condition.membershipDurationDays);
+      console.log('Condition segment ' + condition.segment);
+    } else if (audienceType == 'STATE_BASED') {
+      let definition = audience.stateBasedAudienceDefinition;
+
+      // Get the include conditions.
+      let condition = definition.includeConditions;
+      console.log('Condition daysToLookBack ' +
+        condition.daysToLookBack);
+      console.log('Condition membershipDurationDays ' + condition.membershipDurationDays);
+      console.log('Condition segment ' + condition.segment);
+
+      // Get the exclude condition
+      let excludeCondition = definition.excludeConditions;
+      console.log('Condition exclusionDuration ' +
+        excludeCondition.exclusionDuration);
+      console.log('Condition segment ' + excludeCondition.segment);
+    }
+  }
+}
+  
+  
+  
+  
+  
+  
+  
 
   document.getElementById('auth-button').addEventListener('click', authorize);
 </script>
