@@ -47,11 +47,11 @@
 
 function queryAccounts() {
   // Load the Google Analytics client library.
-  gapi.client.load('analytics', 'v4').then(function() {
+  gapi.client.load('analytics', 'v3').then(function() {
 
     // Get a list of all Google Analytics accounts for this user
     //gapi.client.analytics.management.accounts.list().then(handleAccounts);
-    gapi.client.analytics.management.remarketingAudience.list(
+  let request = gapi.client.analytics.management.remarketingAudience.list(
     {
       'accountId': "1533091",
       'webPropertyId': "UA-1533091-1",
